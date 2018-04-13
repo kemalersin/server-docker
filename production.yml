@@ -20,8 +20,8 @@ services:
     env_file:
       - env/i-mutabakat.env
     networks:
-      - i-mutabakat
       - mongodb
+      - i-mutabakat
     restart: unless-stopped
 
   kitapdostu:
@@ -38,6 +38,6 @@ services:
     env_file:
       - env/kitapdostu.env
     networks:
-      - kitapdostu
       - mongodb
+      - kitapdostu
     restart: unless-stopped
