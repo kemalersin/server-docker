@@ -9,6 +9,7 @@ networks:
 services:
   i-mutabakat:
     build: "/opt/projects/i-mutabakat"
+    container_name: i-mutabakat
     depends_on:
       - mongodb
     volumes:
