@@ -1,0 +1,41 @@
+version: "3.5"
+
+networks:
+  i-mutabakat: ~
+  kitapdostu: ~
+
+services:
+  i-mutabakat:
+    build: "/opt/projects/i-mutabakat"
+    depends_on:
+      - mongodb
+    volumes:
+      - "/usr/lib:/usr/lib:ro"
+      - "/opt/projects/i-mutabakat/dist:/home"
+      - "/opt/projects/i-mutabakat/node_modules:/home/node_modules:ro"
+    links:
+      - mongodb
+    env_file:
+      - env/i-mutabakat.env
+    networks:
+      - i-mutabakat
+      - mongodb
+    restart: unless-stopped
+
+  kitapdostu:
+    build: "/opt/projects/kitapdostu"
+    container_name: kitapdostu
+    depends_on:
+      - mongodb
+    volumes:
+      - "/usr/lib:/usr/lib:ro"
+      - "/opt/projects/kitapdostu/dist:/home"
+      - "/opt/projects/kitapdostu/node_modules:/home/node_modules:ro"
+    links:
+      - mongodb
+    env_file:
+      - env/kitapdostu.env
+    networks:
+      - kitapdostu
+      - mongodb
+    restart: unless-stopped
