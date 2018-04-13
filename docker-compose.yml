@@ -9,6 +9,13 @@ networks:
   prometheus-grafana: ~
   prometheus-node-exporter: ~
 
+  i-mutabakat:
+    external:
+      name: i-mutabakat
+  kitapdostu:
+    external:
+      name: kitapdostu
+
 services:
   mysql: 
     image: mariadb
@@ -59,7 +66,7 @@ services:
       - grafana
     image: "nginx:alpine"
     container_name: nginx
-    links:
+    external_links:
       - i-mutabakat
       - kitapdostu
     networks: 

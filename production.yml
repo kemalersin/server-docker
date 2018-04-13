@@ -1,8 +1,10 @@
 version: "3.5"
 
 networks:
-  i-mutabakat: ~
-  kitapdostu: ~
+  i-mutabakat:
+    name: i-mutabakat
+  kitapdostu:
+    name: kitapdostu
 
 services:
   i-mutabakat:
