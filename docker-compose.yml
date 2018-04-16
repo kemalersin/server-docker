@@ -4,6 +4,7 @@ networks:
   mysql: ~
   mongodb: ~
   nginx: ~
+  pritunl: ~
   grafana: ~
   nextcloud: ~
   prometheus-grafana: ~
@@ -64,6 +65,7 @@ services:
     depends_on: 
       - nextcloud
       - grafana
+      - pritunl
     image: "nginx:alpine"
     container_name: nginx
     external_links:
@@ -73,6 +75,7 @@ services:
       - nginx
       - nextcloud
       - grafana
+      - pritunl
       - i-mutabakat
       - kitapdostu
     ports: 
@@ -86,6 +89,23 @@ services:
       - "/opt/volumes/nginx/static:/etc/nginx/static:ro"
       - "/opt/volumes/nginx/conf.d:/etc/nginx/conf.d:ro"
       - "/opt/volumes/nginx/cache:/etc/nginx/cache:rw"
+      - "/etc/localtime:/etc/localtime:ro"
+
+  pritunl:
+    depends_on:
+      - mongodb
+    env_file: 
+      - env/pritunl.env
+    image: "jippi/pritunl"
+    container_name: pritunl
+    networks:
+      - pritunl
+      - mongodb
+    privileged: true
+    restart: unless-stopped
+    volumes:
+      - "/opt/docker-files/pritunl.conf:/etc/pritunl.conf"
+      - "/opt/volumes/pritunl:/var/lib/pritunl"
       - "/etc/localtime:/etc/localtime:ro"
 
   nextcloud: 
