@@ -19,7 +19,7 @@ services:
     links:
       - mongodb
     env_file:
-      - env/i-mutabakat.env
+      - /opt/docker/env/i-mutabakat.env
     networks:
       - mongodb
       - i-mutabakat
@@ -37,7 +37,7 @@ services:
     links:
       - mongodb
     env_file:
-      - env/kitapdostu.env
+      - /opt/docker/env/kitapdostu.env
     networks:
       - mongodb
       - kitapdostu

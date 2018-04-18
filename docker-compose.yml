@@ -3,6 +3,8 @@ version: "3.5"
 networks:
   mysql: ~
   mongodb: ~
+  phpmyadmin: ~
+  rabbitmq: ~
   nginx: ~
   pritunl: ~
   grafana: ~
@@ -23,8 +25,7 @@ services:
     container_name: mysql
     networks: 
       - mysql
-    env_file:
-      - env/mysql.env
+    env_file: env/mysql.env
     restart: unless-stopped
     volumes: 
       - "/opt/volumes/mysql:/var/lib/mysql"
@@ -33,26 +34,57 @@ services:
   mongodb:
     image: mongo:3.4
     container_name: mongodb
-    env_file:
-      - env/mongodb.env
+    env_file: env/mongodb.env
     networks:
       - mongodb
     restart: unless-stopped
     ports:
-      - "27018:27017/tcp"
+      - "27018:27017"
     volumes:
       - "/opt/volumes/mongodb:/data/db"
       - "/opt/backup/mongodb:/backup"
+      - "/etc/localtime:/etc/localtime:ro"
+
+  phpmyadmin:
+    depends_on:
+      - mysql
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    env_file: env/phpmyadmin.env 
+    networks:
+      - mysql
+      - phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8090:80"
+    volumes:
+      - "/opt/volumes/phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php"
+      - "/opt/volumes/phpmyadmin/sessions:/sessions"
+      - "/etc/localtime:/etc/localtime:ro"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    container_name: rabbitmq
+    env_file: env/rabbitmq.env 
+    networks:
+      - rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    privileged: true
+    restart: unless-stopped
+    volumes:
+      - "/opt/volumes/rabbitmq:/var/lib/rabbitmq"
       - "/etc/localtime:/etc/localtime:ro"
 
   grafana: 
     depends_on: 
       - prometheus
       - node-exporter
-    env_file:
-      - env/grafana.env 
     image: "grafana/grafana:latest"
     container_name: grafana
+    env_file: env/grafana.env 
     networks: 
       - grafana
       - prometheus-grafana
@@ -65,7 +97,9 @@ services:
     depends_on: 
       - nextcloud
       - grafana
+      - rabbitmq
       - pritunl
+      - phpmyadmin
     image: "nginx:alpine"
     container_name: nginx
     external_links:
@@ -75,7 +109,9 @@ services:
       - nginx
       - nextcloud
       - grafana
+      - rabbitmq
       - pritunl
+      - phpmyadmin
       - i-mutabakat
       - kitapdostu
     ports: 
@@ -94,14 +130,19 @@ services:
   pritunl:
     depends_on:
       - mongodb
-    env_file: 
-      - env/pritunl.env
+    env_file: env/pritunl.env
     image: "jippi/pritunl"
     container_name: pritunl
     networks:
       - pritunl
       - mongodb
+    ports:
+      - "1194:1194/udp"
     privileged: true
+    command: >
+      pritunl set app.reverse_proxy true
+      && pritunl set app.server_ssl false
+      && pritunl set app.server_port 9700
     restart: unless-stopped
     volumes:
       - "/opt/docker-files/pritunl.conf:/etc/pritunl.conf"
