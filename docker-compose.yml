@@ -5,13 +5,21 @@ networks:
   mongodb: ~
   phpmyadmin: ~
   rabbitmq: ~
-  postal: ~
   nginx: ~
   pritunl: ~
   grafana: ~
   nextcloud: ~
   prometheus-grafana: ~
   prometheus-node-exporter: ~
+
+  postal:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+    ipam:
+      driver: default
+      config:
+        - subnet: 73.0.0.0/16
 
   i-mutabakat:
     external:
@@ -91,17 +99,24 @@ services:
       - net.ipv6.conf.default.disable_ipv6=1
       - net.ipv6.conf.lo.disable_ipv6=1
     networks:
-      - postal
-      - mysql
-      - rabbitmq
+      mysql:
+      rabbitmq:
+      postal:
+        ipv4_address: 73.0.0.10
     ports:
       - "25:25"
-      - "5000:80"
+      - "5000:5000"
+      - "5010:5010"
+      - "5011:5011"
     privileged: true
     restart: unless-stopped
     volumes:
       - "/opt/docker-files/postal.yml:/opt/postal/config/postal.yml:ro"
+      - "/opt/volumes/postal/config:/opt/postal/config"
       - "/opt/volumes/postal/assets:/opt/postal/public/assets"
+      - "/opt/volumes/nginx/ssl/dhparam.pem:/opt/postal/config/lets_encrypt.pem:ro"
+      - "/opt/volumes/nginx/ssl/nginx.key:/opt/postal/config/fast_server.key:ro"
+      - "/opt/volumes/nginx/ssl/nginx.crt:/opt/postal/config/fast_server.cert:ro"
       - "/etc/localtime:/etc/localtime:ro"
 
   grafana: 
