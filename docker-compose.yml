@@ -114,9 +114,6 @@ services:
       - "/opt/docker-files/postal.yml:/opt/postal/config/postal.yml:ro"
       - "/opt/volumes/postal/config:/opt/postal/config"
       - "/opt/volumes/postal/assets:/opt/postal/public/assets"
-      - "/opt/volumes/nginx/ssl/dhparam.pem:/opt/postal/config/lets_encrypt.pem:ro"
-      - "/opt/volumes/nginx/ssl/nginx.key:/opt/postal/config/fast_server.key:ro"
-      - "/opt/volumes/nginx/ssl/nginx.crt:/opt/postal/config/fast_server.cert:ro"
       - "/etc/localtime:/etc/localtime:ro"
 
   grafana: 
