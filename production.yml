@@ -3,8 +3,8 @@ version: "3.5"
 networks:
   i-mutabakat:
     name: i-mutabakat
-  kitapdostu:
-    name: kitapdostu
+  moonlight-land:
+    name: moonlight-land
 
 services:
   i-mutabakat:
@@ -25,20 +25,33 @@ services:
       - i-mutabakat
     restart: unless-stopped
 
-  kitapdostu:
-    build: "/opt/projects/kitapdostu"
-    container_name: kitapdostu
+  moonlight-land:
+    build: "/opt/projects/moonlight-land"
+    container_name: moonlight-land
+    volumes:
+      - "/usr/lib:/usr/lib:ro"
+      - "/opt/projects/moonlight-land/dist:/home"
+      - "/opt/projects/moonlight-land/node_modules:/home/node_modules:ro"
+    env_file:
+      - /opt/docker/env/moonlight-land.env
+    networks:
+      - moonlight-land
+    restart: unless-stopped
+
+  moonlight-web:
+    build: "/opt/projects/moonlight-web"
+    container_name: moonlight-web
     depends_on:
       - mongodb
     volumes:
       - "/usr/lib:/usr/lib:ro"
-      - "/opt/projects/kitapdostu/dist:/home"
-      - "/opt/projects/kitapdostu/node_modules:/home/node_modules:ro"
+      - "/opt/projects/moonlight-web/dist:/home"
+      - "/opt/projects/moonlight-web/node_modules:/home/node_modules:ro"
     links:
       - mongodb
     env_file:
-      - /opt/docker/env/kitapdostu.env
+      - /opt/docker/env/moonlight-web.env
     networks:
       - mongodb
-      - kitapdostu
+      - moonlight-web
     restart: unless-stopped

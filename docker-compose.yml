@@ -24,9 +24,12 @@ networks:
   i-mutabakat:
     external:
       name: i-mutabakat
-  kitapdostu:
+  moonlight-land:
     external:
-      name: kitapdostu
+      name: moonlight-land
+  moonlight-web:
+    external:
+      name: moonlight-web
 
 services:
   mysql: 
@@ -38,6 +41,7 @@ services:
     restart: unless-stopped
     volumes: 
       - "/opt/volumes/mysql:/var/lib/mysql"
+      - "/opt/backup/mysql:/backup"
       - "/etc/localtime:/etc/localtime:ro"
 
   mongodb:
@@ -143,7 +147,8 @@ services:
     container_name: nginx
     external_links:
       - i-mutabakat
-      - kitapdostu
+      - moonlight-land
+      - moonlight-web
     networks: 
       - nginx
       - nextcloud
@@ -153,7 +158,8 @@ services:
       - pritunl
       - phpmyadmin
       - i-mutabakat
-      - kitapdostu
+      - moonlight-land
+      - moonlight-web
     ports: 
       - "80:80"
       - "443:443"
