@@ -8,7 +8,7 @@ networks:
   nginx: ~
   pritunl: ~
   grafana: ~
-  nextcloud: ~
+  # nextcloud: ~
   prometheus-grafana: ~
   prometheus-node-exporter: ~
 
@@ -140,7 +140,7 @@ services:
 
   nginx: 
     depends_on: 
-      - nextcloud
+      # - nextcloud
       - grafana
       - rabbitmq
       - postal
@@ -155,7 +155,7 @@ services:
       - olimpus-wordpress
     networks: 
       - nginx
-      - nextcloud
+      # - nextcloud
       - grafana
       - rabbitmq
       - postal
@@ -200,18 +200,18 @@ services:
       - "/opt/volumes/pritunl:/var/lib/pritunl"
       - "/etc/localtime:/etc/localtime:ro"
 
-  nextcloud: 
-    depends_on: 
-      - mysql
-    image: "nextcloud"
-    container_name: nextcloud
-    networks: 
-      - nextcloud
-      - mysql
-    restart: unless-stopped
-    volumes: 
-      - "/opt/volumes/nextcloud:/var/www/html"
-      - "/etc/localtime:/etc/localtime:ro"
+  #nextcloud: 
+  #  depends_on: 
+  #    - mysql
+  #  image: "nextcloud"
+  #  container_name: nextcloud
+  #  networks: 
+  #    - nextcloud
+  #    - mysql
+  #  restart: unless-stopped
+  #  volumes: 
+  #    - "/opt/volumes/nextcloud:/var/www/html"
+  #    - "/etc/localtime:/etc/localtime:ro"
 
   node-exporter: 
     image: prom/node-exporter
