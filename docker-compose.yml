@@ -30,6 +30,9 @@ networks:
   moonlight-web:
     external:
       name: moonlight-web
+  olimpus-wordpress:
+    external:
+      name: olimpus-wordpress
 
 services:
   mysql: 
@@ -149,6 +152,7 @@ services:
       - i-mutabakat
       - moonlight-land
       - moonlight-web
+      - olimpus-wordpress
     networks: 
       - nginx
       - nextcloud
@@ -160,6 +164,7 @@ services:
       - i-mutabakat
       - moonlight-land
       - moonlight-web
+      - olimpus-wordpress
     ports: 
       - "80:80"
       - "443:443"

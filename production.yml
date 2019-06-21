@@ -5,6 +5,8 @@ networks:
     name: i-mutabakat
   moonlight-land:
     name: moonlight-land
+  olimpus-wordpress:
+    name: olimpus-wordpress
 
 services:
   i-mutabakat:
@@ -54,4 +56,21 @@ services:
     networks:
       - mongodb
       - moonlight-web
+    restart: unless-stopped
+
+  olimpus-wordpress:
+    image: wordpress:latest
+    container_name: olimpus-wordpress
+    depends_on:
+      - mysql
+    volumes:
+      - "/opt/wordpress/olimpus.com.tr/config/php.conf.ini:/usr/local/etc/php/conf.d/conf.ini"
+      - "/opt/wordpress/olimpus.com.tr/wp-app:/var/www/html"
+    links:
+      - mysql
+    env_file:
+      - /opt/docker/env/olimpus-wordpress.env
+    networks:
+      - mysql
+      - olimpus-wordpress
     restart: unless-stopped
