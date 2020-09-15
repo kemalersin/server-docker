@@ -7,6 +7,8 @@ networks:
     name: moonlight-land
   olimpus-wordpress:
     name: olimpus-wordpress
+  isletmem-api:
+    name: isletmem-api
 
 services:
   i-mutabakat:
@@ -26,6 +28,26 @@ services:
       - mongodb
       - i-mutabakat
     restart: unless-stopped
+
+  isletmem-api:
+    container_name: isletmem-api
+    image: strapi/strapi
+    depends_on:
+      - isletmem-db
+    ports:
+      - 1337:1337
+    volumes:
+      - "/usr/lib:/usr/lib:ro"
+      - "/opt/projects/isletmem-api:/srv/app"
+    links:
+      - isletmem-db
+    env_file:
+      - /opt/docker/env/isletmem-api.env
+    networks:
+      - isletmem-db
+      - isletmem-api
+    restart: unless-stopped
+    command: "strapi start"
 
   moonlight-land:
     build: "/opt/projects/moonlight-land"
