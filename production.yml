@@ -36,18 +36,18 @@ services:
       - isletmem-db
     ports:
       - 1337:1337
+    env_file:
+      - /opt/docker/env/isletmem-api.env
     volumes:
       - "/usr/lib:/usr/lib:ro"
       - "/opt/projects/isletmem-api:/srv/app"
     links:
       - isletmem-db
-    env_file:
-      - /opt/docker/env/isletmem-api.env
     networks:
       - isletmem-db
       - isletmem-api
     restart: unless-stopped
-    command: "strapi start"
+    command: "NODE_ENV=production npm start"
 
   moonlight-land:
     build: "/opt/projects/moonlight-land"

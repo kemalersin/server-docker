@@ -67,7 +67,7 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
 
   isletmem-db:
-    image: mongo:3.6
+    image: mongo:4.2
     container_name: isletmem-db
     env_file: env/isletmem-db.env
     networks:
